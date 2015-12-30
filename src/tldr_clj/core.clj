@@ -64,5 +64,5 @@
           command (some #(when (= (get % "name") name) %) index)
           platform (choose-platform command)]
       (if (not= command nil)
-        (get-page (str "/" platform "/" name ".md") u)
+        (println (get-page (str "/" platform "/" name ".md") u))
         (println "NOT FOUND")))))
