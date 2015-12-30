@@ -1,7 +1,6 @@
 (ns tldr-clj.core
   (:require [clojure.data.json :as json]
             [clojure.string :as string]
-            [clj-http.client :as client]
             [clojure.tools.cli :refer [parse-opts]])
   (:alias io clojure.java.io)
   (:gen-class))
@@ -31,11 +30,7 @@
       nil)))
 
 (defn get-update [path]
-  (let [response (client/get (str remote path))
-        status-code (response :status)
-        body (response :body)]
-    (when (not= status-code 200)
-      (throw (Exception. (format "Unexpected status code: %s" status-code))))
+  (let [body (slurp (str remote path))]
     (write-cache path body)
     body))
 
