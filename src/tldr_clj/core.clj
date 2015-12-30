@@ -1,6 +1,8 @@
 (ns tldr-clj.core
   (:require [clojure.data.json :as json]
-            [clj-http.client :as client])
+            [clojure.string :as string]
+            [clj-http.client :as client]
+            [clojure.tools.cli :refer [parse-opts]])
   (:alias io clojure.java.io)
   (:gen-class))
 
@@ -56,9 +58,9 @@
       os
       (first platforms))))
 
-(defn -main
+(defn tldr
   ([name]
-   (-main name false))
+   (tldr name false))
   ([name u]
     (let [index (get (json/read-str (get-page "/index.json" u)) "commands")
           command (some #(when (= (get % "name") name) %) index)
@@ -66,3 +68,22 @@
       (if (not= command nil)
         (println (get-page (str "/" platform "/" name ".md") u))
         (println "NOT FOUND")))))
+
+(defn help [summary]
+  (->> ["Usage: tldr [options] command"
+        ""
+        "Options:"
+        summary]
+       (string/join \newline)))
+
+(defn -main [& args]
+  (let [opts (parse-opts args [["-u" "--update" "Update cache"]
+                               ["-h" "--help"]])
+        arguments (opts :arguments)
+        options (opts :options)
+        u (true? (options :update))
+        h (true? (options :help))]
+    (if (or h (= (count arguments) 0))
+      (println (help (opts :summary)))
+      (doseq [command arguments]
+        (tldr command u)))))
