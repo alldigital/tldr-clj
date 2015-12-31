@@ -1,36 +1,23 @@
 # tldr-clj
 
-FIXME: description
+![Screenshot](screenshot.png)
 
 ## Installation
 
-Download from http://example.com/FIXME.
+Download from <https://github.com/iovxw/tldr-clj/releases/tag/v1.0.0>.
 
 ## Usage
 
-FIXME: explanation
+    $ alias tldr="java -jar /path/to/tldr.jar"
+    $ tldr -h
+    Usage: tldr [options] command
 
-    $ java -jar tldr-clj-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+    Options:
+      -u, --update  Update cache
+      -h, --help
 
 ## License
 
-Copyright © 2015 FIXME
+The MIT License (MIT)
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Copyright (c) 2015 iovxw
