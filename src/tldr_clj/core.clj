@@ -53,6 +53,36 @@
       os
       (first platforms))))
 
+(defn color [code]
+  (format "\033[%sm" code))
+
+(def reset-color (color 0))
+(def bold (color 1))
+(def red (color 31))
+(def green (color 32))
+(def white (color 37))
+(def on-blue (color 44))
+(def on-grey (color 40))
+
+(defn r-cmd [cmd]
+  (-> (str "  " on-grey red cmd)
+      (string/replace "{{" white)
+      (string/replace "}}" red)
+      (str reset-color)))
+
+(defn render [markdown]
+  (->> (map (fn [line]
+              (some #(let [r (re-find (first %) line)]
+                       (when r ((second %) r)))
+                    [[#"`(.*)`" #(r-cmd (second %))]
+                     [#"#\s?(.*)" #(str on-blue white bold (second %))]
+                     [#">\s?(.*)" #(str on-blue white (second %))]
+                     [#"-\s?(.*)" #(str on-blue green "● " (second %))]
+                     [#".*" #(str reset-color on-blue %)]]))
+            (string/split-lines markdown))
+       (string/join \newline)
+       (format (str "%s" reset-color))))
+
 (defn tldr
   ([name]
    (tldr name false))
@@ -61,7 +91,7 @@
           command (some #(when (= (get % "name") name) %) index)
           platform (choose-platform command)]
       (if (not= command nil)
-        (println (get-page (str "/" platform "/" name ".md") u))
+        (println (render (get-page (str "/" platform "/" name ".md") u)))
         (println "NOT FOUND")))))
 
 (defn help [summary]
