@@ -8,7 +8,6 @@ Download from <https://github.com/iovxw/tldr-clj/releases/tag/v1.0.0>.
 
 ## Usage
 
-    $ alias tldr="java -jar /path/to/tldr.jar"
     $ tldr -h
     Usage: tldr [options] command
 
